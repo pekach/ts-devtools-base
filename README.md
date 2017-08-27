@@ -1,2 +1,4 @@
 # ts-devtools-base
-WIP
+
+
+Base Dockerfile for TypeScript development tools
