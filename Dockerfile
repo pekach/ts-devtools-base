@@ -20,6 +20,7 @@ RUN apk --no-cache add \
     libsass \
     nodejs-current-npm \
     wget \
+    xhost \
     xvfb \
     && npm -g config set user root \
     && apk --no-cache add --virtual build-deps \
