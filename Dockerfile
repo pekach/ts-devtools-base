@@ -30,4 +30,6 @@ RUN apk --no-cache add \
     && apk del build-deps \
     && cleanup
 
+COPY .npmrc /root/.npmrc
+
 ENV DISPLAY=:0
