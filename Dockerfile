@@ -17,6 +17,7 @@ RUN apk --no-cache add \
     dbus \
     firefox \
     git \
+    hub \
     libsass \
     nodejs-current-npm \
     wget \
