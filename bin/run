@@ -1,0 +1,55 @@
+#!/bin/bash
+
+case "$1" in
+  "install")
+    npm install
+    ;;
+  "build")
+    ng build --output-hashing none
+    ;;
+  "build-prod")
+    ng build --prod --output-hashing none
+    ;;
+  "sync")
+    git ls-remote --exit-code upstream  > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      git remote add upstream "${GIT_UPSTREAM_URL}"
+    fi
+    git fetch upstream
+    git rebase "upstream/${GIT_UPSTREAM_BRANCH}"
+    ;;
+  "serve")
+    ng serve --host 0.0.0.0 --port $PORT
+    ;;
+  "test")
+    echo "Starting xvbf"
+    Xvfb $DISPLAY -screen 0 800x600x24&
+    echo "sleeping 3 sec"
+    sleep 3
+    xhost + > /dev/null
+    ng test --single-run
+    ;;
+  "build-watch")
+    ng build  --watch --output-hashing none
+    ;;
+  "test-watch")
+    echo "Starting xvbf"
+    Xvfb $DISPLAY -screen 0 800x600x24&
+    echo "sleeping 3 sec"
+    sleep 3
+    xhost +
+    ng test
+    ;;
+  *)
+    echo "Commands:"
+    echo "install: Install dependencies"
+    echo "build: Fast build project"
+    echo "build-prod: Build project (optimized)"
+    echo "sync: Sync with git upstream"
+    echo "serve: Serve files at \"${PORT}\" port"
+    echo "test: Test project"
+    echo "test-watch: Test and watch for changes"
+    echo "build-watch: Build and watch for changes"
+    exit 1
+    ;;
+esac

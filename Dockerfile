@@ -2,6 +2,23 @@ FROM alpine:edge
 
 COPY /sbin/cleanup /usr/local/sbin/cleanup
 
+# User
+ENV UNAME="pekar"              \
+    GNAME="peka"               \
+    UHOME="/home/pekar"        \
+    UID="1000"                 \
+    GID="1000"                 \
+    SHELL="/bin/bash"          \
+    WORKSPACE="/mnt/workspace"
+
+ENV DISPLAY=:0
+
+ENV PORT=4200
+EXPOSE $PORT
+
+ENV GIT_UPSTREAM_URL="https://github.com/pekach/pekach.git"
+ENV GIT_UPSTREAM_BRANCH="master"
+
 # Update
 RUN echo "http://nl.alpinelinux.org/alpine/edge/testing" \
     >> /etc/apk/repositories \
@@ -10,6 +27,7 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/testing" \
     && apk --no-cache upgrade \
     && cleanup
 
+# Install stuff
 RUN apk --no-cache add \
     bash \
     coreutils \
@@ -32,6 +50,21 @@ RUN apk --no-cache add \
     && apk del build-deps \
     && cleanup
 
-COPY .npmrc /root/.npmrc
+# Add user
+RUN echo "${UNAME}:x:${UID}:${GID}:${UNAME},,,:${UHOME}:${SHELL}" \
+    >> /etc/passwd \
+    && echo "${UNAME}::17032:0:99999:7:::" \
+    >> /etc/shadow \
+    && echo "${GNAME}:x:${GID}:${UNAME}" \
+    >> /etc/group \
+    && mkdir -p "${UHOME}" "${WORKSPACE}" /tmp/.X11-unix \
+    && chmod 1777 /tmp/.X11-unix \
+    && chown "${UID}":"${GID}" "${UHOME}" "${WORKSPACE}"
 
-ENV DISPLAY=:0
+WORKDIR "${WORKSPACE}"
+
+USER $UNAME
+
+COPY /bin/* /usr/local/bin/
+
+ENTRYPOINT ["bash", "/usr/local/bin/run"]
