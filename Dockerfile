@@ -38,6 +38,7 @@ RUN apk --no-cache add \
     hub \
     libsass \
     nodejs-current-npm \
+    openssh \
     wget \
     xhost \
     xvfb \
