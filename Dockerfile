@@ -1,6 +1,7 @@
 FROM alpine:edge
 
 COPY /sbin/cleanup /usr/local/sbin/cleanup
+COPY /bin/* /usr/local/bin/
 
 # User
 ENV UNAME="pekar"              \
@@ -62,10 +63,9 @@ RUN echo "${UNAME}:x:${UID}:${GID}:${UNAME},,,:${UHOME}:${SHELL}" \
     && chmod 1777 /tmp/.X11-unix \
     && chown "${UID}":"${GID}" "${UHOME}" "${WORKSPACE}"
 
-WORKDIR "${WORKSPACE}"
-
 USER $UNAME
 
-COPY /bin/* /usr/local/bin/
+ENV HOME="${UHOME}"
+WORKDIR "${WORKSPACE}"
 
 ENTRYPOINT ["bash", "/usr/local/bin/run"]
