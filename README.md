@@ -4,7 +4,15 @@ Base Dockerfile for TypeScript development tools
 
 ### How to run:
 
-`docker run -ti --rm -v "$(pwd)":/mnt/workspace pekach/ts-devtools-base:latest <CMD>`
+``` bash
+docker run \
+  -ti \
+  -p 4200:4200 \
+  --rm \
+  -v "$(pwd)":/mnt/workspace \
+  pekach/ts-devtools-base:latest \
+  <CMD>
+```
 
 where `<CMD>` can be:
  - install: Install dependencies
