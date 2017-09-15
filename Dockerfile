@@ -40,6 +40,7 @@ RUN apk --no-cache add \
     libsass \
     nodejs-current-npm \
     openssh \
+    rsync \
     wget \
     xhost \
     xvfb \
